@@ -1,0 +1,23 @@
+<html>
+   <head>
+      <link rel="stylesheet" href="assets/css/styles.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+      <script src="assets/js/barcodes.js"></script>
+   </head>
+   <body>
+      <div id='inputs' class='no-print'>
+         <div class="input-group">
+            <label for="sellerid">Seller ID</label>
+            <input name="sellerid" id="sellerid" type="number" value="">
+         </div>
+
+         <b>Labels:</b>
+         <i id='add-label-input' class="bi bi-plus-square-fill"></i>
+
+         <div id="label-input-groups"></div>
+
+         <button id="generate-barcodes">Generate Labels</button>
+      </div>
+      <div id='pages'></div>
+   </body>
+</html>

@@ -1,0 +1,91 @@
+body {
+   font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+#inputs {
+   margin-bottom: 50px;
+}
+
+#add-label-input {
+   cursor: pointer;
+   margin-left: 15px;
+}
+
+label {
+   font-weight: bold;
+   width: 200px;
+   float: left;
+}
+label:after {
+   content: ": "
+}
+
+.label-input-group {
+   margin-top: 3px;
+   height: 25px;
+}
+.label-input-group .input-group {
+   display: inline-block;
+   margin-left: 20px;
+}
+.label-input-group label {
+   width: auto;
+   margin-right: 15px;
+}
+.label-input-group input {
+   width: 40px;
+}
+.label-input-group .delete-label-input {
+   margin-left: 20px;
+}
+
+#generate-barcodes {
+   cursor: pointer;
+   margin-top: 20px;
+}
+
+
+.barcode-label {
+   width: 33.3%;
+   margin: 16.75px 0;
+   font-size: 14px;
+   font-weight: bold;
+   float: left;
+}
+
+.barcode-label>* {
+   margin: auto;
+   text-align: center;
+}
+
+.barcode-header {
+   font-size: 12px;
+}
+
+.barcode-footer {
+   margin-top: -2px;
+}
+.barcode-footer>* {
+   display: inline-block;
+   margin: 0 7px;
+}
+
+@media print {
+   @page {
+      size: letter portrait;
+      margin: .375in 0;
+   }
+
+   .no-print {
+      display: none !important;
+   }
+
+   .barcode-label {
+      page-break-inside: avoid;
+   
+
+   .barcode-label:nth-child(10n) {
+      page-break-after: always;
+   }
+}
+
