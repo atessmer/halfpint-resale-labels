@@ -1,4 +1,3 @@
-const API_ENDPOINT = 'https://barcode.orcascan.com/?type=code93&format=svg&data=';
 const BARCODE_WIDTH = 120;
 const BARCODE_HEIGHT = 35;
 
@@ -33,16 +32,10 @@ const addLabelInputs = (price=null, count=null) => {
 const svgNodeCache = {};
 const getBarcodeSvgNode = async (data) => {
    if (!(data in svgNodeCache)) {
-      const url = API_ENDPOINT + data;
-      const response = await fetch(url);
-
-      const template = document.createElement('template');
-      template.innerHTML = await response.text();
-      const svg = template.content.childNodes[0];
-
-      svg.setAttribute('preserveAspectRatio', 'none');
-      svg.setAttribute('width', BARCODE_WIDTH);
-      svg.setAttribute('height', BARCODE_HEIGHT);
+      const svg = Code93Barcode(data).toSVG({
+         width: BARCODE_WIDTH,
+         height: BARCODE_HEIGHT,
+      });
 
       svgNodeCache[data] = svg;
    }
@@ -52,21 +45,6 @@ const getBarcodeSvgNode = async (data) => {
 
 const getBarcodeLabelNode = async (sellerID, price) => {
    const svg = await getBarcodeSvgNode(`${sellerID}$${price}`);
-
-   // Remove padding
-   const transform = svg.getElementById('__padding').getAttribute('transform');
-   const padMatches = transform.match(/translate\((\d+) (\d+)\)/);
-   const paddingX = parseInt(padMatches[1]);
-   const paddingY = parseInt(padMatches[2]);
-
-   const viewBoxParts = svg.getAttribute('viewBox').split(' ');
-   const viewBox = [
-      paddingX,
-      paddingY,
-      viewBoxParts[2] - (2 * paddingX),
-      viewBoxParts[3] - (2 * paddingY)
-   ].join(' ');
-   svg.setAttribute('viewBox', viewBox);
 
    const template = document.createElement('template');
    template.innerHTML = `
