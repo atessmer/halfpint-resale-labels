@@ -20,23 +20,35 @@ label:after {
    content: ": "
 }
 
-.label-input-group {
-   margin-top: 3px;
+select {
+   padding: 0 5px;
+}
+
+.input-group {
    height: 25px;
 }
-.label-input-group .input-group {
-   display: inline-block;
-   margin-left: 20px;
-}
-.label-input-group label {
-   width: auto;
-   margin-right: 15px;
-}
-.label-input-group input {
-   width: 40px;
-}
-.label-input-group .delete-label-input {
-   margin-left: 20px;
+
+
+.label-input-group {
+   margin-top: 3px;
+
+   .input-group {
+      display: inline-block;
+      margin-left: 20px;
+   }
+
+   label {
+      width: auto;
+      margin-right: 15px;
+   }
+
+   input {
+      width: 40px;
+   }
+
+   .delete-label-input {
+      margin-left: 20px;
+   }
 }
 
 #generate-barcodes {
@@ -44,17 +56,27 @@ label:after {
    margin-top: 20px;
 }
 
+.page {
+   display: inline-block;
+   box-sizing: border-box;
+   margin: 25px;
+   border: 1px solid black;
+   box-shadow: 3px 3px #777;
+}
 
 .barcode-label {
-   width: 33.3%;
-   margin: 16.75px 0;
+   display: table;
    font-size: 14px;
    font-weight: bold;
    float: left;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+   box-sizing: border-box;
 }
 
-.barcode-label>* {
-   margin: auto;
+.barcode-content {
+   display: table-cell;
+   vertical-align: middle;
    text-align: center;
 }
 
@@ -73,19 +95,62 @@ label:after {
 @media print {
    @page {
       size: letter portrait;
-      margin: .375in 0;
    }
 
    .no-print {
       display: none !important;
    }
 
-   .barcode-label {
+   .page {
       page-break-inside: avoid;
-   
-
-   .barcode-label:nth-child(10n) {
       page-break-after: always;
+      border: none;
+      box-shadow: none;
+   }
+
+   .barcode-label {
+      border: none;
    }
 }
 
+
+/*
+ * Avery template 5260 (1" x 2-5/8" address labels)
+ */
+#pages.template_5260 {
+   .page {
+      width: calc(8.5in + 2px); /* Account for border width */
+      height: calc(11in + 2px); /* Account for border height */
+      padding: .5in .1875in;
+   }
+
+   .barcode-label {
+      width: 2.625in;
+      height: 1in;
+      margin-right: .125in;
+   }
+   .barcode-label:nth-child(3n) {
+      margin-right: 0;
+   }
+}
+
+
+/*
+ * Avery template 5195 (2/3" x 1-3/4" return address labels)
+ */
+#pages.template_5195 {
+   .page {
+      width: calc(8.5in + 2px); /* Account for border width */
+      height: calc(11in + 2px); /* Account for border height */
+      padding: .375in .5in;
+   }
+
+   .barcode-label {
+      width: 1.75in;
+      height: .666in;
+      margin-right: .166in;
+   }
+   .barcode-label:nth-child(4n) {
+      margin-right: 0;
+   }
+}

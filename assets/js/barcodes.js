@@ -1,6 +1,39 @@
 const BARCODE_WIDTH = 120;
 const BARCODE_HEIGHT = 35;
 
+const LABEL_TEMPLATES = {
+   5260: {
+      desc: '1" x 2-5/8" Address Labels',
+      count: 30,
+   },
+   5195: {
+      desc: '2/3" x 1-3/4" Return Address Labels',
+      count: 60,
+   },
+};
+
+const populateTemplateOptions = () => {
+   const template = document.getElementById('template');
+
+   for (const [id, cfg] of Object.entries(LABEL_TEMPLATES)) {
+      const option = document.createElement('option');
+      option.value = id;
+      option.innerText = `${id}: ${cfg.desc}`;
+      template.appendChild(option);
+   }
+
+   template.dispatchEvent(new Event('change'));
+};
+
+const getTemplate = () => {
+   const templateId = document.getElementById('template').value;
+
+   return {
+      id: document.getElementById('template').value,
+      ...LABEL_TEMPLATES[templateId],
+   }
+};
+
 const addLabelInputs = (price=null, count=null) => {
    const labelInputGroups = document.getElementById('label-input-groups');
    const idx = labelInputGroups.childNodes.length;
@@ -49,12 +82,14 @@ const getBarcodeLabelNode = async (sellerID, price) => {
    const template = document.createElement('template');
    template.innerHTML = `
       <div class='barcode-label'>
-         <div class='barcode-header'>halfpintresale.com</div>
-         <div class='barcode-svg'></div>
-         <div class='barcode-footer'>
-            <div class='seller-id'>${sellerID}</div>
-            <div class='price'>$${price}</div>
-         </div>
+         <div class='barcode-content'>
+            <div class='barcode-header'>halfpintresale.com</div>
+            <div class='barcode-svg'></div>
+            <div class='barcode-footer'>
+               <div class='seller-id'>${sellerID}</div>
+               <div class='price'>$${price}</div>
+            </div>
+	 </div>
       </div>
    `.trim();
    const barcodeLabel = template.content.childNodes[0]
@@ -87,16 +122,40 @@ const generateBarcodeLabels = async () => {
          );
       }
    }
-   for (const barcodeLabel of barcodeLabels) {
-      pages.appendChild(barcodeLabel);
+
+   let page;
+   for (const [i, barcodeLabel] of barcodeLabels.entries()) {
+      if (i % getTemplate().count == 0) {
+         page = document.createElement('div');
+	 page.classList.add('page');
+	 pages.appendChild(page);
+      }
+      page.appendChild(barcodeLabel);
    }
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
+   document.getElementById('template').addEventListener('change', (e) => {
+      const pages = document.getElementById('pages');
+
+      while (pages.lastChild) {
+         pages.removeChild(pages.lastChild);
+      }
+
+      pages.classList.forEach((cls) => {
+         if (cls.startsWith('template_')) {
+            pages.classList.remove(cls)
+         }
+      });
+      pages.classList.add(`template_${getTemplate().id}`);
+   });
+   populateTemplateOptions();
+
+
    document.getElementById('add-label-input').addEventListener("click", (e) => {
       addLabelInputs();
    });
-   addLabelInputs('1', '10');
+   addLabelInputs('2', '10');
 
    document.getElementById('generate-barcodes').addEventListener('click', generateBarcodeLabels);
 });
