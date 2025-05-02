@@ -10,6 +10,10 @@ const LABEL_TEMPLATES = {
       desc: '2/3" x 1-3/4" Return Address Labels',
       count: 60,
    },
+   'S-20133': {
+      desc: '1" x 2" Labels',
+      count: 40,
+   },
 };
 
 const populateTemplateOptions = () => {

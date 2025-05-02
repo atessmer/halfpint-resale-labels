@@ -154,3 +154,20 @@ select {
       margin-right: 0;
    }
 }
+
+
+/*
+ * Uline template S-20133 (1" x 2" labels)
+ */
+#pages.template_S-20133 {
+   .page {
+      width: calc(8.5in + 2px); /* Account for border width */
+      height: calc(11in + 2px); /* Account for border height */
+      padding: .5in .25in;
+   }
+
+   .barcode-label {
+      width: 2in;
+      height: 1in;
+   }
+}
