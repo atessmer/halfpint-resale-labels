@@ -1,28 +1,55 @@
-<html>
+<!doctype html>
+<html lang="en">
    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Halfping Resale Label Creator</title>
       <link rel="stylesheet" href="assets/css/styles.css">
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+      <link rel="stylesheet" href="assets/lib/bootstrap-icons/1.11.3/bootstrap-icons.min.css">
+      <link rel="stylesheet" href="assets/lib/bootstrap/5.3.5/bootstrap.min.css">
+      <script src="assets/lib/bootstrap/5.3.5/bootstrap.min.js"></script>
       <script src="assets/js/code93.js"></script>
       <script src="assets/js/barcodes.js"></script>
    </head>
    <body>
-      <div id='inputs' class='no-print'>
-         <div class="input-group">
-            <label for="template">Template</label>
-            <select name="template" id="template"></select>
+      <div id='content-container' class='container mt-2'>
+         <div id='controls' class='no-print'>
+            <div class="mb-1 row">
+               <div class="col-2"></div>
+               <label for="consigner" class="col-2 col-form-label">
+                  Consigner Number
+               </label>
+               <div class="col-6">
+                  <input type="number" id="consigner" class="form-control">
+               </div>
+            </div>
+            <div class="mb-1 row">
+               <div class="col-2"></div>
+               <label for="template" class="col-2 col-form-label">
+                  Labels Template
+               </label>
+               <div class="col-6">
+                  <select name="template" id="template" class="form-select"></select>
+               </div>
+            </div>
+            <div class="mb-1 row">
+               <div class="col-2"></div>
+               <label class="col-2 col-form-label">
+                  Tags
+               </label>
+               <div class="col-3">
+                  <button type="button" id="add-tag" class="btn btn-secondary w-100">Add</button>
+               </div>
+            </div>
+            <div id="tags-container"></div>
+            <div class="mt-4 mb-1 row">
+               <div class="col-4"></div>
+               <div class="col-3">
+                  <button type="button" id="generate-barcodes" class="btn btn-secondary w-100">Generate</button>
+               </div>
+            </div>
          </div>
-         <div class="input-group">
-            <label for="sellerid">Seller ID</label>
-            <input name="sellerid" id="sellerid" type="number" value="">
-         </div>
-
-         <b>Labels:</b>
-         <i id='add-label-input' class="bi bi-plus-square-fill"></i>
-
-         <div id="label-input-groups"></div>
-
-         <button id="generate-barcodes">Generate Labels</button>
+         <div id='pages'></div>
       </div>
-      <div id='pages'></div>
    </body>
 </html>

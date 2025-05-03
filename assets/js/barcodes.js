@@ -38,32 +38,42 @@ const getTemplate = () => {
    }
 };
 
-const addLabelInputs = (price=null, count=null) => {
-   const labelInputGroups = document.getElementById('label-input-groups');
-   const idx = labelInputGroups.childNodes.length;
+const addTagGroup = (price=null, count=null) => {
+   const tagsContainer = document.getElementById('tags-container');
+   const idx = tagsContainer.childNodes.length;
 
    const template = document.createElement('template');
    template.innerHTML = `
-      <div class="label-input-group">
-         <div class="input-group">
-            <label for="price_${idx}">Price</label>
-            $<input name="price" id="price_${idx}" type="number" value="${price}">.00
+      <div class="tag-group mb-2 row">
+         <div class="col-4"></div>
+         <div class="col-1">
+            <input type="number" name="count" value="${count}" class="form-control">
          </div>
-         <div class="input-group">
-            <label for="count_${idx}">Count</label>
-            <input name="count" id="count_${idx}" type="number" value="${count}">
+         <div class="col-1 col-form-label">
+            @
          </div>
-         <i class="delete-label-input bi bi-x-square-fill"></i>
+         <div class="col-2">
+            <div class="input-group">
+               <span class="input-group-text">$</span>
+               <input type="number" name="price" value="${price}" class="form-control">
+               <span class="input-group-text">.00</span>
+            </div>
+         </div>
+         <div class="col-1">
+            <button type="button" class="delete-tag btn btn-danger">
+               <i class="delete-label-input bi bi-trash3-fill"></i>
+            </button>
+         </div>
       </div>
    `.trim();
-   const labelInputGroup = template.content.childNodes[0];
+   const tagGroup = template.content.childNodes[0];
 
-   const deleteButton = labelInputGroup.getElementsByClassName('delete-label-input')[0]
+   const deleteButton = tagGroup.getElementsByClassName('delete-tag')[0]
    deleteButton.addEventListener('click', (e) => {
-      e.target.parentNode.remove();
+      e.target.closest('.tag-group').remove();
    })
 
-   labelInputGroups.appendChild(labelInputGroup);
+   tagsContainer.appendChild(tagGroup);
 }
 
 const svgNodeCache = {};
@@ -80,8 +90,8 @@ const getBarcodeSvgNode = async (data) => {
    return svgNodeCache[data].cloneNode(true);
 };
 
-const getBarcodeLabelNode = async (sellerID, price) => {
-   const svg = await getBarcodeSvgNode(`${sellerID}$${price}`);
+const getBarcodeLabelNode = async (consigner, price) => {
+   const svg = await getBarcodeSvgNode(`${consigner}$${price}`);
 
    const template = document.createElement('template');
    template.innerHTML = `
@@ -90,7 +100,7 @@ const getBarcodeLabelNode = async (sellerID, price) => {
             <div class='barcode-header'>halfpintresale.com</div>
             <div class='barcode-svg'></div>
             <div class='barcode-footer'>
-               <div class='seller-id'>${sellerID}</div>
+               <div class='consigner'>${consigner}</div>
                <div class='price'>$${price}</div>
             </div>
 	 </div>
@@ -104,12 +114,12 @@ const getBarcodeLabelNode = async (sellerID, price) => {
 
 const generateBarcodeLabels = async () => {
    const pages = document.getElementById('pages');
-   const sellerID = document.getElementById('sellerid');
-   const labelPrices = document.getElementsByName('price');
-   const labelCounts = document.getElementsByName('count');
+   const consigner = document.getElementById('consigner');
+   const tagPrices = document.getElementsByName('price');
+   const tagCounts = document.getElementsByName('count');
 
-   if (labelPrices.length != labelCounts.length) {
-      console.error('Length of label prices and counts do not match.');
+   if (tagPrices.length != tagCounts.length) {
+      console.error('Number of count and price inputs does not match.');
       return;
    }
 
@@ -118,11 +128,11 @@ const generateBarcodeLabels = async () => {
    }
 
    const barcodeLabels = []
-   for (var i = 0; i < labelCounts.length; i++) {
-      const count = labelCounts[i].value;
+   for (var i = 0; i < tagCounts.length; i++) {
+      const count = tagCounts[i].value;
       for (var j = 0; j < count; j++) {
          barcodeLabels.push(
-            await getBarcodeLabelNode(sellerID.value, labelPrices[i].value+'.00')
+            await getBarcodeLabelNode(consigner.value, tagPrices[i].value+'.00')
          );
       }
    }
@@ -156,10 +166,10 @@ document.addEventListener("DOMContentLoaded", async () => {
    populateTemplateOptions();
 
 
-   document.getElementById('add-label-input').addEventListener("click", (e) => {
-      addLabelInputs();
+   document.getElementById('add-tag').addEventListener("click", (e) => {
+      addTagGroup();
    });
-   addLabelInputs('2', '10');
+   addTagGroup('2', '10');
 
    document.getElementById('generate-barcodes').addEventListener('click', generateBarcodeLabels);
 });
