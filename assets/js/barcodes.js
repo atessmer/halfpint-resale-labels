@@ -68,12 +68,6 @@ const addTagGroup = (price=null, count=null) => {
    `.trim();
    const tagGroup = template.content.childNodes[0];
 
-   tagGroup.querySelectorAll('input').forEach((input) => {
-      input.addEventListener('input', (e) => {
-         generateBarcodeLabels();
-      });
-   });
-
    const deleteButton = tagGroup.getElementsByClassName('delete-tag')[0];
    deleteButton.addEventListener('click', (e) => {
       e.target.closest('.tag-group').remove();
@@ -183,28 +177,24 @@ document.addEventListener("DOMContentLoaded", async () => {
    document.getElementById('template').addEventListener('input', (e) => {
       const pages = document.getElementById('pages');
 
-      while (pages.lastChild) {
-         pages.removeChild(pages.lastChild);
-      }
-
       pages.classList.forEach((cls) => {
          if (cls.startsWith('template_')) {
             pages.classList.remove(cls)
          }
       });
       pages.classList.add(`template_${getTemplate().id}`);
-      generateBarcodeLabels();
    });
    populateTemplateOptions();
-
-   document.getElementById('consigner').addEventListener('input', (e) => {
-      generateBarcodeLabels();
-   });
 
    document.getElementById('add-tag').addEventListener("click", (e) => {
       addTagGroup();
    });
    addTagGroup('2', '10');
+
+   // Re-generate labels on any form field input event
+   document.forms.controls.addEventListener('input', (e) => {
+      generateBarcodeLabels();
+   });
 
    generateBarcodeLabels();
 });
