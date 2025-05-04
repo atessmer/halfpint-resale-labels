@@ -52,6 +52,12 @@ label {
    }
 }
 
+.form-control.is-invalid {
+   background-image: none !important;
+   background-color: rgba(var(--bs-danger-rgb), .1);
+   padding-right: .75rem !important;
+}
+
 @media print {
    @page {
       size: letter portrait;

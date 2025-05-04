@@ -71,6 +71,7 @@ const addTagGroup = (price=null, count=null) => {
    })
 
    tagsContainer.appendChild(tagGroup);
+   validateAllInputs();
 }
 
 const updateTagsMsg = () => {
@@ -169,6 +170,23 @@ const generateBarcodeLabels = () => {
    updateTagsMsg();
 };
 
+const validateInput = (input) => {
+   if (input.value == '' ||
+       (input.type == 'number' && parseInt(input.value) <= 0)) {
+      input.classList.add('is-invalid');
+   } else {
+      input.classList.remove('is-invalid');
+   }
+};
+
+const validateAllInputs = () => {
+   for (const input of document.forms.controls.elements) {
+      if (['INPUT'].includes(input.tagName)) {
+         validateInput(input);
+      }
+   }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
    document.getElementById('template').addEventListener('input', (e) => {
       const pages = document.getElementById('pages');
@@ -189,8 +207,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
    // Re-generate labels on any form field input event
    document.forms.controls.addEventListener('input', (e) => {
+      validateInput(e.target);
       generateBarcodeLabels();
    });
 
+   validateAllInputs();
    generateBarcodeLabels();
 });
