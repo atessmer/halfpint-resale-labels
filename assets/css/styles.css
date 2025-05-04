@@ -27,19 +27,16 @@ label {
 }
 
 .barcode-label {
-   display: table;
    font-size: 14px;
    font-weight: bold;
    float: left;
    border: 1px solid #ddd;
    border-radius: 5px;
    box-sizing: border-box;
-}
-
-.barcode-content {
-   display: table-cell;
-   vertical-align: middle;
-   text-align: center;
+   overflow: hidden;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 
 .barcode-header {
@@ -93,27 +90,6 @@ label {
       margin-right: .125in;
    }
    .barcode-label:nth-child(3n) {
-      margin-right: 0;
-   }
-}
-
-
-/*
- * Avery template 5195 (2/3" x 1-3/4" return address labels)
- */
-#pages.template_5195 {
-   .page {
-      width: calc(8.5in + 2px); /* Account for border width */
-      height: calc(11in + 2px); /* Account for border height */
-      padding: .375in .5in;
-   }
-
-   .barcode-label {
-      width: 1.75in;
-      height: .666in;
-      margin-right: .166in;
-   }
-   .barcode-label:nth-child(4n) {
       margin-right: 0;
    }
 }
