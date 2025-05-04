@@ -60,8 +60,7 @@ const addTagGroup = (price=null, count=null) => {
    const template = document.createElement('template');
    template.innerHTML = `
       <div class="tag-group mb-2 row">
-         <div class="col-4"></div>
-         <div class="col-4">
+         <div class="offset-1 offset-md-4 col col-md-4">
             <div class="input-group">
                <input type="number" name="count" value="${count}" class="form-control">
                <span class="input-group-text pe-4">Tags</span>
