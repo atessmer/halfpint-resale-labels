@@ -12,6 +12,25 @@ const LABEL_TEMPLATES = {
    },
 };
 
+/*
+ * Cookie handlers.
+ * source: https://www.quirksmode.org/js/cookies.html
+ */
+const createCookie = (name, value) => {
+   document.cookie = `${name}=${value}; path=/`;
+}
+
+const readCookie = (name) => {
+   const cookies = document.cookie.split(";");
+   for (const cookie of cookies) {
+      [cookie_name, cookie_value] = cookie.trim().split("=");
+      if (cookie_name == name) {
+         return cookie_value;
+      }
+   }
+   return null;
+}
+
 const populateTemplateOptions = () => {
    const template = document.getElementById('template');
 
@@ -182,6 +201,12 @@ const validateAllInputs = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+   const consigner = document.getElementById('consigner');
+   consigner.value = readCookie('consigner');
+   consigner.addEventListener('input', (e) => {
+      createCookie('consigner', e.target.value);
+   });
+
    document.getElementById('template').addEventListener('input', (e) => {
       const pages = document.getElementById('pages');
 
