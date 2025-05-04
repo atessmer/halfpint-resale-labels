@@ -26,7 +26,7 @@ const populateTemplateOptions = () => {
       template.appendChild(option);
    }
 
-   template.dispatchEvent(new Event('change'));
+   template.dispatchEvent(new Event('input'));
 };
 
 const getTemplate = () => {
@@ -69,25 +69,24 @@ const addTagGroup = (price=null, count=null) => {
    const tagGroup = template.content.childNodes[0];
 
    tagGroup.querySelectorAll('input').forEach((input) => {
-      input.addEventListener('change', (e) => {
-         updateTagsMsg();
+      input.addEventListener('input', (e) => {
+         generateBarcodeLabels();
       });
    });
 
    const deleteButton = tagGroup.getElementsByClassName('delete-tag')[0];
    deleteButton.addEventListener('click', (e) => {
       e.target.closest('.tag-group').remove();
-      updateTagsMsg();
+      generateBarcodeLabels();
    })
 
    tagsContainer.appendChild(tagGroup);
-   updateTagsMsg()
 }
 
 const updateTagsMsg = () => {
    const tagCounts = document.getElementsByName('count');
    const totalTags = tagCounts.values().reduce((sum, tagCount) => {
-      return sum + parseInt(tagCount.value)
+      return sum + parseInt(tagCount.value || 0)
    }, 0);
 
    const template = getTemplate();
@@ -176,10 +175,12 @@ const generateBarcodeLabels = async () => {
       }
       page.appendChild(barcodeLabel);
    }
+
+   updateTagsMsg();
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-   document.getElementById('template').addEventListener('change', (e) => {
+   document.getElementById('template').addEventListener('input', (e) => {
       const pages = document.getElementById('pages');
 
       while (pages.lastChild) {
@@ -192,15 +193,18 @@ document.addEventListener("DOMContentLoaded", async () => {
          }
       });
       pages.classList.add(`template_${getTemplate().id}`);
-      updateTagsMsg();
+      generateBarcodeLabels();
    });
    populateTemplateOptions();
 
+   document.getElementById('consigner').addEventListener('input', (e) => {
+      generateBarcodeLabels();
+   });
 
    document.getElementById('add-tag').addEventListener("click", (e) => {
       addTagGroup();
    });
    addTagGroup('2', '10');
 
-   document.getElementById('generate-barcodes').addEventListener('click', generateBarcodeLabels);
+   generateBarcodeLabels();
 });
