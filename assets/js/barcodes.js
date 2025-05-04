@@ -68,13 +68,43 @@ const addTagGroup = (price=null, count=null) => {
    `.trim();
    const tagGroup = template.content.childNodes[0];
 
-   const deleteButton = tagGroup.getElementsByClassName('delete-tag')[0]
+   tagGroup.querySelectorAll('input').forEach((input) => {
+      input.addEventListener('change', (e) => {
+         updateTagsMsg();
+      });
+   });
+
+   const deleteButton = tagGroup.getElementsByClassName('delete-tag')[0];
    deleteButton.addEventListener('click', (e) => {
       e.target.closest('.tag-group').remove();
+      updateTagsMsg();
    })
 
    tagsContainer.appendChild(tagGroup);
+   updateTagsMsg()
 }
+
+const updateTagsMsg = () => {
+   const tagCounts = document.getElementsByName('count');
+   const totalTags = tagCounts.values().reduce((sum, tagCount) => {
+      return sum + parseInt(tagCount.value)
+   }, 0);
+
+   const template = getTemplate();
+   const lastPageTags = totalTags % template.count;
+   const emptyLabels = lastPageTags ? (template.count - lastPageTags) : 0;
+
+   const tagsMsg = document.getElementById('tags-msg');
+   if (emptyLabels) {
+      tagsMsg.classList.remove('text-success');
+      tagsMsg.classList.add('text-danger');
+      tagsMsg.innerText = `${emptyLabels} unused labels on last page.`;
+   } else {
+      tagsMsg.classList.remove('text-danger');
+      tagsMsg.classList.add('text-success');
+      tagsMsg.innerText = 'No unused labels on last page.';
+   }
+};
 
 const svgNodeCache = {};
 const getBarcodeSvgNode = async (data) => {
@@ -162,6 +192,7 @@ document.addEventListener("DOMContentLoaded", async () => {
          }
       });
       pages.classList.add(`template_${getTemplate().id}`);
+      updateTagsMsg();
    });
    populateTemplateOptions();
 
