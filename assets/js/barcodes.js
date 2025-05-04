@@ -100,7 +100,7 @@ const updateTagsMsg = () => {
 };
 
 const svgNodeCache = {};
-const getBarcodeSvgNode = async (data) => {
+const getBarcodeSvgNode = (data) => {
    if (!(data in svgNodeCache)) {
       const svg = Code93Barcode(data).toSVG({
          width: BARCODE_WIDTH,
@@ -113,8 +113,8 @@ const getBarcodeSvgNode = async (data) => {
    return svgNodeCache[data].cloneNode(true);
 };
 
-const getBarcodeLabelNode = async (consigner, price) => {
-   const svg = await getBarcodeSvgNode(`${consigner}$${price}`);
+const getBarcodeLabelNode = (consigner, price) => {
+   const svg = getBarcodeSvgNode(`${consigner}$${price}`);
 
    const template = document.createElement('template');
    template.innerHTML = `
@@ -135,7 +135,7 @@ const getBarcodeLabelNode = async (consigner, price) => {
    return template.content.childNodes[0];
 };
 
-const generateBarcodeLabels = async () => {
+const generateBarcodeLabels = () => {
    const pages = document.getElementById('pages');
    const consigner = document.getElementById('consigner');
    const tagPrices = document.getElementsByName('price');
@@ -155,7 +155,7 @@ const generateBarcodeLabels = async () => {
       const count = tagCounts[i].value;
       for (var j = 0; j < count; j++) {
          barcodeLabels.push(
-            await getBarcodeLabelNode(consigner.value, tagPrices[i].value+'.00')
+            getBarcodeLabelNode(consigner.value, tagPrices[i].value+'.00')
          );
       }
    }
@@ -173,7 +173,7 @@ const generateBarcodeLabels = async () => {
    updateTagsMsg();
 };
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
    document.getElementById('template').addEventListener('input', (e) => {
       const pages = document.getElementById('pages');
 
