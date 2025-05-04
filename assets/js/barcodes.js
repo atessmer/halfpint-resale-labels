@@ -42,23 +42,17 @@ const addTagGroup = (price=null, count=null) => {
    template.innerHTML = `
       <div class="tag-group mb-2 row">
          <div class="col-4"></div>
-         <div class="col-1">
-            <input type="number" name="count" value="${count}" class="form-control">
-         </div>
-         <div class="col-1 col-form-label">
-            @
-         </div>
-         <div class="col-2">
+         <div class="col-4">
             <div class="input-group">
-               <span class="input-group-text">$</span>
+               <input type="number" name="count" value="${count}" class="form-control">
+               <span class="input-group-text pe-4">Tags</span>
+               <span class="input-group-text ps-4 pe-1">$</span>
                <input type="number" name="price" value="${price}" class="form-control">
-               <span class="input-group-text">.00</span>
+               <span class="input-group-text ps-1">.00</span>
+               <button type="button" class="delete-tag btn btn-danger">
+                  <i class="delete-label-input bi bi-trash3-fill"></i>
+               </button>
             </div>
-         </div>
-         <div class="col-1">
-            <button type="button" class="delete-tag btn btn-danger">
-               <i class="delete-label-input bi bi-trash3-fill"></i>
-            </button>
          </div>
       </div>
    `.trim();
