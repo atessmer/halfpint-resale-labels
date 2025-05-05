@@ -10,6 +10,10 @@ label {
    }
 }
 
+.tag-group input {
+   text-align: right;
+}
+
 #content-container {
    max-width: 11.25in;
 }
