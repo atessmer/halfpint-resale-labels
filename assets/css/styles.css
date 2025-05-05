@@ -10,8 +10,12 @@ label {
    }
 }
 
-.tag-group input {
-   text-align: right;
+.tag-group {
+   max-width: 300px;
+
+   input {
+      text-align: right;
+   }
 }
 
 #content-container {

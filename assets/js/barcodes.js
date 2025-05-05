@@ -59,19 +59,15 @@ const addTagGroup = (price=null, count=null) => {
 
    const template = document.createElement('template');
    template.innerHTML = `
-      <div class="tag-group mb-2 row">
-         <div class="offset-1 offset-md-4 col col-md-4">
-            <div class="input-group">
-               <input type="number" name="count" value="${count}" class="form-control">
-               <span class="input-group-text pe-4">Tags</span>
-               <span class="input-group-text ps-4 pe-1">$</span>
-               <input type="number" name="price" value="${price}" class="form-control">
-               <span class="input-group-text ps-1">.00</span>
-               <button type="button" class="delete-tag btn btn-danger">
-                  <i class="delete-label-input bi bi-trash3-fill"></i>
-               </button>
-            </div>
-         </div>
+      <div class="tag-group mb-2 input-group">
+         <input type="number" name="count" value="${count}" class="form-control">
+         <span class="input-group-text pe-4">Tags</span>
+         <span class="input-group-text ps-4 pe-1">$</span>
+         <input type="number" name="price" value="${price}" class="form-control">
+         <span class="input-group-text ps-1">.00</span>
+         <button type="button" class="delete-tag btn btn-danger">
+            <i class="delete-label-input bi bi-trash3-fill"></i>
+         </button>
       </div>
    `.trim();
    const tagGroup = template.content.childNodes[0];
