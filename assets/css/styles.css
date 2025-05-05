@@ -16,6 +16,7 @@ label {
 
 #pages {
    text-align: center;
+   overflow-x: scroll;
 }
 
 .page {
