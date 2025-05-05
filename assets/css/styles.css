@@ -2,50 +2,30 @@ body {
    font-family: 'Helvetica', 'Arial', sans-serif;
 }
 
-label {
-   font-weight: bold;
+label:after {
+   content: ": ";
+}
 
-   &:after {
-      content: ": "
-   }
+/* Hide the "spinner" arrows to increase/decrease the value */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .tag-group {
    max-width: 300px;
-
-   input {
-      text-align: right;
-   }
 }
 
-#content-container {
-   max-width: 11.25in;
-}
-
-#pages {
-   text-align: center;
-   overflow-x: scroll;
-}
 
 .page {
-   display: inline-block;
-   box-sizing: border-box;
    margin: 25px;
-   border: 1px solid black;
    box-shadow: 4px 4px #777;
 }
 
 .barcode-label {
    font-size: 14px;
-   font-weight: bold;
-   float: left;
-   border: 1px solid #ddd;
-   border-radius: 5px;
-   box-sizing: border-box;
-   overflow: hidden;
-   display: flex;
-   justify-content: center;
-   align-items: center;
 }
 
 .barcode-header {
@@ -54,11 +34,6 @@ label {
 
 .barcode-footer {
    margin-top: -2px;
-
-   &>* {
-      display: inline-block;
-      margin: 0 7px;
-   }
 }
 
 .form-control.is-invalid {
@@ -67,19 +42,27 @@ label {
    padding-right: .75rem !important;
 }
 
+
 @media print {
    @page {
       size: letter portrait;
    }
 
-   .no-print {
-      display: none !important;
+   :root {
+      --bs-border-width: 0px !important;
+      --bs-border-style: none !important;
+   }
+
+   #pages {
+      margin: 0;
+      padding: 0;
+      max-width: unset;
    }
 
    .page {
+      margin: 0;
       page-break-inside: avoid;
       page-break-after: always;
-      border: none;
       box-shadow: none;
    }
 
@@ -94,8 +77,8 @@ label {
  */
 #pages.template_5260 {
    .page {
-      width: calc(8.5in + 2px); /* Account for border width */
-      height: calc(11in + 2px); /* Account for border height */
+      width: calc(8.5in + (var(--bs-border-width) * 2));
+      height: calc(11in + (var(--bs-border-width) * 2));
       padding: .5in .1875in;
    }
 
@@ -115,8 +98,8 @@ label {
  */
 #pages.template_S-20133 {
    .page {
-      width: calc(8.5in + 2px); /* Account for border width */
-      height: calc(11in + 2px); /* Account for border height */
+      width: calc(8.5in + (var(--bs-border-width) * 2));
+      height: calc(11in + (var(--bs-border-width) * 2));
       padding: .5in .25in;
    }
 

@@ -12,31 +12,31 @@
       <script src="assets/js/barcodes.js"></script>
    </head>
    <body>
-      <div id='content-container' class='container mt-2'>
-         <form id='controls' class='no-print mt-5'>
-            <div class="mb-2 row justify-content-center">
-               <label for="consigner" class="col-md-3 col-lg-2 col-form-label">Consigner Number</label>
-               <div class="col-md-6">
-                  <input type="number" id="consigner" class="form-control">
-               </div>
+      <form id='controls' class='container d-print-none mt-5'>
+         <div class="mb-2 row justify-content-center">
+            <label for="consigner" class="col-md-3 col-lg-2 col-form-label fw-bold">Consigner Number</label>
+            <div class="col-md-6">
+               <input type="number" id="consigner" class="form-control">
             </div>
-            <div class="mb-2 row justify-content-center">
-               <label for="template" class="col-md-3 col-lg-2 col-form-label">Labels Template</label>
-               <div class="col-md-6">
-                  <select name="template" id="template" class="form-select"></select>
-               </div>
+         </div>
+         <div class="mb-2 row justify-content-center">
+            <label for="template" class="col-md-3 col-lg-2 col-form-label fw-bold">Labels Template</label>
+            <div class="col-md-6">
+               <select name="template" id="template" class="form-select"></select>
             </div>
-            <div class="mb-2 row justify-content-center">
-               <label class="col-md-3 col-lg-2 col-form-label">Tags</label>
-               <div class="col-md-2">
-                  <button type="button" id="add-tag" class="btn btn-secondary w-100">Add</button>
-               </div>
-               <div id="tags-msg" class="col-md-4 col-form-label text-center"></div>
+         </div>
+         <div class="mb-2 row justify-content-center">
+            <label class="col-md-3 col-lg-2 col-form-label fw-bold">Tags</label>
+            <div class="col-md-2">
+               <button type="button" id="add-tag" class="btn btn-secondary w-100">Add</button>
             </div>
-            <div class="mb-2 row justify-content-center">
-               <div id="tags-container" class="col col-md-6 offset-md-3 offset-lg-2"></div>
-            </div>
-         </form>
+            <div id="tags-msg" class="col-md-4 col-form-label text-center"></div>
+         </div>
+         <div class="mb-2 row justify-content-center">
+            <div id="tags-container" class="col col-md-6 offset-md-3 offset-lg-2"></div>
+         </div>
+      </form>
+      <div id='pages-container' class="container d-flex justify-content-center overflow-x-scroll">
          <div id='pages'></div>
       </div>
    </body>

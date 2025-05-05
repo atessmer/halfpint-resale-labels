@@ -59,11 +59,11 @@ const addTagGroup = (price=null, count=null) => {
 
    const template = document.createElement('template');
    template.innerHTML = `
-      <div class="tag-group mb-2 input-group">
-         <input type="number" name="count" value="${count}" class="form-control">
+      <div class="tag-group mb-2 input-group ">
+         <input type="number" name="count" value="${count}" class="form-control text-end pe-1">
          <span class="input-group-text pe-4">Tags</span>
          <span class="input-group-text ps-4 pe-1">$</span>
-         <input type="number" name="price" value="${price}" class="form-control">
+         <input type="number" name="price" value="${price}" class="form-control text-end pe-1">
          <span class="input-group-text ps-1">.00</span>
          <button type="button" class="delete-tag btn btn-danger">
             <i class="delete-label-input bi bi-trash3-fill"></i>
@@ -123,13 +123,13 @@ const getBarcodeLabelNode = (consigner, price) => {
 
    const template = document.createElement('template');
    template.innerHTML = `
-      <div class='barcode-label'>
+      <div class='barcode-label fw-bold border border-light-subtle rounded-1 float-start overflow-hidden d-flex justify-content-center align-items-center'>
          <div class='barcode-content'>
             <div class='barcode-header'>halfpintresale.com</div>
             <div class='barcode-svg'></div>
             <div class='barcode-footer'>
-               <div class='consigner'>${consigner}</div>
-               <div class='price'>$${price}</div>
+               <div class='consigner d-inline-block mx-2'>${consigner}</div>
+               <div class='price d-inline-block mx-2'>$${price}</div>
             </div>
 	 </div>
       </div>
@@ -169,8 +169,8 @@ const generateBarcodeLabels = () => {
    for (const [i, barcodeLabel] of barcodeLabels.entries()) {
       if (i % getTemplate().count == 0) {
          page = document.createElement('div');
-	 page.classList.add('page');
-	 pages.appendChild(page);
+         page.classList.add('page', 'text-center', 'border', 'border-black');
+         pages.appendChild(page);
       }
       page.appendChild(barcodeLabel);
    }
