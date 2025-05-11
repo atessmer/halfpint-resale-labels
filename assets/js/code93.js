@@ -5,6 +5,10 @@ const Code93Barcode = (opts) => {
       };
    }
 
+   if (opts.text.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== 0) {
+      throw new Error('Code 93 must only contain digits, capital letters,' +
+                      ' spaces, and symbols -.$/+%');
+   }
    const text = opts.text.split('');
 
    const LOOKUP_TABLE = {
@@ -83,10 +87,6 @@ const Code93Barcode = (opts) => {
 
       // Text characters
       for (const c of text) {
-         if (!(c in LOOKUP_TABLE)) {
-            throw new Error('Code 93 must only contain digits, capital letters,' +
-                            ' spaces, and symbols -.$/+');
-         }
          s += LOOKUP_TABLE[c].encoding.toString(2);
       }
 
