@@ -65,20 +65,13 @@ const Code93Barcode = (opts) => {
    };
 
    const csum = (chars, maxWeight) => {
-      let csum = 0;
-      let weight = 1;
-      for (const c of chars.slice().reverse()) {
-         csum += (LOOKUP_TABLE[c].value * weight);
-
-         weight++;
-         if (weight == maxWeight) {
-            weigth = 1;
-         }
-      }
-      csum = csum % 47;
+      const csum = chars.toReversed().reduce((sum, c, idx) => {
+         let weight = (idx % maxWeight) + 1;
+         return sum + (LOOKUP_TABLE[c].value * weight);
+      }, 0);
 
       for (const [k, v] of Object.entries(LOOKUP_TABLE)) {
-         if (LOOKUP_TABLE[k].value == csum) {
+         if (LOOKUP_TABLE[k].value == (csum % 47)) {
             return k;
          }
       }
