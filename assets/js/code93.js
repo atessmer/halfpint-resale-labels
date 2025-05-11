@@ -11,58 +11,50 @@ const Code93Barcode = (opts) => {
    }
    const text = opts.text.split('');
 
-   const LOOKUP_TABLE = {
-      '0':   {encoding: 0b100010100, value: 0},
-      '1':   {encoding: 0b101001000, value: 1},
-      '2':   {encoding: 0b101000100, value: 2},
-      '3':   {encoding: 0b101000010, value: 3},
-      '4':   {encoding: 0b100101000, value: 4},
-      '5':   {encoding: 0b100100100, value: 5},
-      '6':   {encoding: 0b100100010, value: 6},
-      '7':   {encoding: 0b101010000, value: 7},
-      '8':   {encoding: 0b100010010, value: 8},
-      '9':   {encoding: 0b100001010, value: 9},
-      'A':   {encoding: 0b110101000, value: 10},
-      'B':   {encoding: 0b110100100, value: 11},
-      'C':   {encoding: 0b110100010, value: 12},
-      'D':   {encoding: 0b110010100, value: 13},
-      'E':   {encoding: 0b110010010, value: 14},
-      'F':   {encoding: 0b110001010, value: 15},
-      'G':   {encoding: 0b101101000, value: 16},
-      'H':   {encoding: 0b101100100, value: 17},
-      'I':   {encoding: 0b101100010, value: 18},
-      'J':   {encoding: 0b100110100, value: 19},
-      'K':   {encoding: 0b100011010, value: 20},
-      'L':   {encoding: 0b101011000, value: 21},
-      'M':   {encoding: 0b101001100, value: 22},
-      'N':   {encoding: 0b101000110, value: 23},
-      'O':   {encoding: 0b100101100, value: 24},
-      'P':   {encoding: 0b100010110, value: 25},
-      'Q':   {encoding: 0b110110100, value: 26},
-      'R':   {encoding: 0b110110010, value: 27},
-      'S':   {encoding: 0b110101100, value: 28},
-      'T':   {encoding: 0b110100110, value: 29},
-      'U':   {encoding: 0b110010110, value: 30},
-      'V':   {encoding: 0b110011010, value: 31},
-      'W':   {encoding: 0b101101100, value: 32},
-      'X':   {encoding: 0b101100110, value: 33},
-      'Y':   {encoding: 0b100110110, value: 34},
-      'Z':   {encoding: 0b100111010, value: 35},
-      '-':   {encoding: 0b100101110, value: 36},
-      '.':   {encoding: 0b111010100, value: 37},
-      ' ':   {encoding: 0b111010010, value: 38},
-      '$':   {encoding: 0b111001010, value: 39},
-      '/':   {encoding: 0b101101110, value: 40},
-      '+':   {encoding: 0b101110110, value: 41},
-      '%':   {encoding: 0b110101110, value: 42},
+   const CHARACTERS = [
+      '0', '1', '2', '3',
+      '4', '5', '6', '7',
+      '8', '9', 'A', 'B',
+      'C', 'D', 'E', 'F',
+      'G', 'H', 'I', 'J',
+      'K', 'L', 'M', 'N',
+      'O', 'P', 'Q', 'R',
+      'S', 'T', 'U', 'V',
+      'W', 'X', 'Y', 'Z',
+      '-', '.', ' ', '$',
+      '/', '+', '%',
       // Only used for csum; Code 93 Extended not implemented
-      '($)': {encoding: 0b100100110, value: 43},
-      '(%)': {encoding: 0b111011010, value: 44},
-      '(/)': {encoding: 0b111010110, value: 45},
-      '(+)': {encoding: 0b100110010, value: 46},
+      '($)', '(%)', '(/)', '(+)',
       // Start/Stop
-      null:   {encoding: 0b101011110, value: undefined},
+      null,
+   ];
+
+   const ENCODINGS = [
+      0b100010100, 0b101001000, 0b101000100, 0b101000010,
+      0b100101000, 0b100100100, 0b100100010, 0b101010000,
+      0b100010010, 0b100001010, 0b110101000, 0b110100100,
+      0b110100010, 0b110010100, 0b110010010, 0b110001010,
+      0b101101000, 0b101100100, 0b101100010, 0b100110100,
+      0b100011010, 0b101011000, 0b101001100, 0b101000110,
+      0b100101100, 0b100010110, 0b110110100, 0b110110010,
+      0b110101100, 0b110100110, 0b110010110, 0b110011010,
+      0b101101100, 0b101100110, 0b100110110, 0b100111010,
+      0b100101110, 0b111010100, 0b111010010, 0b111001010,
+      0b101101110, 0b101110110, 0b110101110, 0b100100110,
+      0b111011010, 0b111010110, 0b100110010, 0b101011110,
+   ];
+
+   const charToValue = (c) => {
+      return CHARACTERS.indexOf(c);
    };
+
+   const charToEncoding = (c) => {
+      return ENCODINGS[charToValue(c)].toString(2);
+   };
+
+   const valueToChar = (value) => {
+      return CHARACTERS[value];
+   }
 
    const bitCount = () => {
       return ((text.length + 4) * 9) + 1;
@@ -71,34 +63,30 @@ const Code93Barcode = (opts) => {
    const csum = (chars, maxWeight) => {
       const csum = chars.toReversed().reduce((sum, c, idx) => {
          let weight = (idx % maxWeight) + 1;
-         return sum + (LOOKUP_TABLE[c].value * weight);
+         return sum + (charToValue(c) * weight);
       }, 0);
 
-      for (const [k, v] of Object.entries(LOOKUP_TABLE)) {
-         if (LOOKUP_TABLE[k].value == (csum % 47)) {
-            return k;
-         }
-      }
+      return valueToChar(csum % 47);
    }
 
    const toBinaryString = () => {
       // Start
-      let s = LOOKUP_TABLE[null].encoding.toString(2);
+      let s = charToEncoding(null);
 
       // Text characters
       for (const c of text) {
-         s += LOOKUP_TABLE[c].encoding.toString(2);
+         s += charToEncoding(c);
       }
 
       // Csum characters (C and K)
       const C = csum(text, 20);
-      s += LOOKUP_TABLE[C].encoding.toString(2);
+      s += charToEncoding(C);
 
       const K = csum(text.concat(C), 15);
-      s += LOOKUP_TABLE[K].encoding.toString(2);
+      s += charToEncoding(K);
 
       // End
-      s += LOOKUP_TABLE[null].encoding.toString(2);
+      s += charToEncoding(null);
       // Termination Bar
       s += '1';
 
