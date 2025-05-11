@@ -26,7 +26,7 @@ const Code93Barcode = (opts) => {
       // Only used for csum; Code 93 Extended not implemented
       '($)', '(%)', '(/)', '(+)',
       // Start/Stop
-      null,
+      '*',
    ];
 
    const ENCODINGS = [
@@ -71,7 +71,7 @@ const Code93Barcode = (opts) => {
 
    const toBinaryString = () => {
       // Start
-      let s = charToEncoding(null);
+      let s = charToEncoding('*');
 
       // Text characters
       for (const c of text) {
@@ -86,7 +86,7 @@ const Code93Barcode = (opts) => {
       s += charToEncoding(K);
 
       // End
-      s += charToEncoding(null);
+      s += charToEncoding('*');
       // Termination Bar
       s += '1';
 
