@@ -92,29 +92,13 @@ const Code93Barcode = (opts) => {
       ].join('');
    };
 
-   const toElements = function*() {
-      let value = null;
-      let bits = 0;
-      for (const bit of toBinaryString()) {
-         if (bit == value) {
-            bits++;
-            continue;
+   const toElements = function() {
+      return toBinaryString().match(/(.)\1*/g).map(e => {
+         return {
+            fill: e[0] == '1',
+            bits: e.length
          }
-
-         if (bits > 0) {
-            yield {
-               fill: value == '1',
-               bits: bits,
-            };
-         }
-
-         value = bit;
-         bits = 1;
-      }
-      yield {
-         fill: value == '1',
-         bits: bits,
-      };
+      });
    };
 
    const toSVG = (opts={}) => {
