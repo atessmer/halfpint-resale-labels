@@ -70,29 +70,26 @@ const Code93Barcode = (opts) => {
    }
 
    const toBinaryString = () => {
-      // Start
-      let s = charToEncoding('*');
+      const encoded = text
+         .map(c => charToEncoding(c))
+         .join('');
 
-      // Text characters
-      for (const c of text) {
-         s += charToEncoding(c);
-      }
+      // Compute checksum characters
+      const csumC = csum(text, 20);
+      const csumK = csum(text.concat(csumC), 15);
 
-      // Csum characters (C and K)
-      const C = csum(text, 20);
-      console.log(C);
-      s += charToEncoding(C);
-
-      const K = csum(text.concat(C), 15);
-      console.log(K);
-      s += charToEncoding(K);
-
-      // End
-      s += charToEncoding('*');
-      // Termination Bar
-      s += '1';
-
-      return s;
+      return [
+         // Add the start bits
+         charToEncoding('*') +
+         // Add the encoded bits
+         encoded +
+         // Add the checksum
+         charToEncoding(csumC) + charToEncoding(csumK) +
+         // Add the stop bits
+         charToEncoding('*') +
+         // Add the termination bit
+         '1'
+      ].join('');
    };
 
    const toElements = function*() {
