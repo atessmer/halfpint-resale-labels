@@ -1,3 +1,5 @@
+import Code93Barcode from './code93.js';
+
 const BARCODE_WIDTH = 120;
 const BARCODE_HEIGHT = 35;
 
@@ -106,7 +108,7 @@ const updateTagsMsg = () => {
 const svgNodeCache = {};
 const getBarcodeSvgNode = (data) => {
    if (!(data in svgNodeCache)) {
-      const svg = Code93Barcode(data).toSVG({
+      const svg = new Code93Barcode(data).toSVG({
          width: BARCODE_WIDTH,
          height: BARCODE_HEIGHT,
       });
