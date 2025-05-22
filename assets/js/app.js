@@ -23,7 +23,7 @@ const createCookie = (name, value) => {
 const readCookie = (name) => {
    const cookies = document.cookie.split(";");
    for (const cookie of cookies) {
-      [cookie_name, cookie_value] = cookie.trim().split("=");
+      const [cookie_name, cookie_value] = cookie.trim().split("=");
       if (cookie_name == name) {
          return cookie_value;
       }
@@ -55,7 +55,6 @@ const getTemplate = () => {
 
 const addTagGroup = (price=null, count=null) => {
    const tagsContainer = document.getElementById('tags-container');
-   const idx = tagsContainer.childNodes.length;
 
    const template = document.createElement('template');
    template.innerHTML = `
@@ -134,7 +133,7 @@ const getBarcodeLabelNode = (consigner, price) => {
 	 </div>
       </div>
    `.trim();
-   const barcodeLabel = template.content.childNodes[0]
+   const barcodeLabel = template.content.childNodes[0];
    barcodeLabel.getElementsByClassName('barcode-svg')[0].appendChild(svg);
 
    return template.content.childNodes[0];
@@ -202,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
       createCookie('consigner', e.target.value);
    });
 
-   document.getElementById('template').addEventListener('input', (e) => {
+   document.getElementById('template').addEventListener('input', () => {
       const pages = document.getElementById('pages');
 
       pages.classList.forEach((cls) => {
@@ -214,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
    });
    populateTemplateOptions();
 
-   document.getElementById('add-tag').addEventListener("click", (e) => {
+   document.getElementById('add-tag').addEventListener("click", () => {
       addTagGroup();
    });
    addTagGroup('2', '10');

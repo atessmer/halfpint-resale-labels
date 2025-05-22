@@ -5,7 +5,7 @@ const Code93Barcode = (opts) => {
       };
    }
 
-   if (opts.text.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== 0) {
+   if (opts.text.search(/^[0-9A-Z\-. $/+%]+$/) !== 0) {
       throw new Error('Code 93 must only contain digits, capital letters,' +
                       ' spaces, and symbols -.$/+%');
    }
