@@ -56,10 +56,6 @@ const Code93Barcode = (opts) => {
       return SYMBOLS[value];
    }
 
-   const bitCount = () => {
-      return ((text.length + 4) * 9) + 1;
-   };
-
    const csum = (symbols, maxWeight) => {
       const csum = symbols.toReversed().reduce((sum, c, idx) => {
          let weight = (idx % maxWeight) + 1;
@@ -120,10 +116,12 @@ const Code93Barcode = (opts) => {
          svg.appendChild(rect);
       }
 
-      const bitWidth = width / bitCount();
+      const elements = toElements();
+      const bitCount = elements.reduce((sum, e) => sum += e.bits, 0);
+      const bitWidth = width / bitCount;
       let x = pad;
       let commands = []
-      for (const e of toElements()) {
+      for (const e of elements) {
          if (e.fill) {
             commands.push(`M${x} ${pad} v ${height} h ${e.bits * bitWidth} V ${pad} Z`);
          }
