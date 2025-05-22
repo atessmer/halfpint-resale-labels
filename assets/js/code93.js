@@ -26,7 +26,7 @@ const Code93Barcode = (opts) => {
       // Only used for csum; Code 93 Extended not implemented
       '($)', '(%)', '(/)', '(+)',
       // Start/Stop
-      '*',
+      '\xff',
    ];
 
    const ENCODINGS = [
@@ -80,13 +80,13 @@ const Code93Barcode = (opts) => {
 
       return [
          // Add the start bits
-         symbolToEncoding('*') +
+         symbolToEncoding('\xff') +
          // Add the encoded bits
          encoded +
          // Add the checksum
          symbolToEncoding(csumC) + symbolToEncoding(csumK) +
          // Add the stop bits
-         symbolToEncoding('*') +
+         symbolToEncoding('\xff') +
          // Add the termination bit
          '1'
       ].join('');
