@@ -11,7 +11,7 @@ const Code93Barcode = (opts) => {
    }
    const text = opts.text.split('');
 
-   const CHARACTERS = [
+   const SYMBOLS = [
       '0', '1', '2', '3',
       '4', '5', '6', '7',
       '8', '9', 'A', 'B',
@@ -44,49 +44,49 @@ const Code93Barcode = (opts) => {
       '111011010', '111010110', '100110010', '101011110',
    ];
 
-   const charToValue = (c) => {
-      return CHARACTERS.indexOf(c);
+   const symbolToValue = (c) => {
+      return SYMBOLS.indexOf(c);
    };
 
-   const charToEncoding = (c) => {
-      return ENCODINGS[charToValue(c)];
+   const symbolToEncoding = (c) => {
+      return ENCODINGS[symbolToValue(c)];
    };
 
-   const valueToChar = (value) => {
-      return CHARACTERS[value];
+   const valueToSymbol = (value) => {
+      return SYMBOLS[value];
    }
 
    const bitCount = () => {
       return ((text.length + 4) * 9) + 1;
    };
 
-   const csum = (chars, maxWeight) => {
-      const csum = chars.toReversed().reduce((sum, c, idx) => {
+   const csum = (symbols, maxWeight) => {
+      const csum = symbols.toReversed().reduce((sum, c, idx) => {
          let weight = (idx % maxWeight) + 1;
-         return sum + (charToValue(c) * weight);
+         return sum + (symbolToValue(c) * weight);
       }, 0);
 
-      return valueToChar(csum % 47);
+      return valueToSymbol(csum % 47);
    }
 
    const toBinaryString = () => {
       const encoded = text
-         .map(c => charToEncoding(c))
+         .map(c => symbolToEncoding(c))
          .join('');
 
-      // Compute checksum characters
+      // Compute checksum symbols
       const csumC = csum(text, 20);
       const csumK = csum(text.concat(csumC), 15);
 
       return [
          // Add the start bits
-         charToEncoding('*') +
+         symbolToEncoding('*') +
          // Add the encoded bits
          encoded +
          // Add the checksum
-         charToEncoding(csumC) + charToEncoding(csumK) +
+         symbolToEncoding(csumC) + symbolToEncoding(csumK) +
          // Add the stop bits
-         charToEncoding('*') +
+         symbolToEncoding('*') +
          // Add the termination bit
          '1'
       ].join('');
