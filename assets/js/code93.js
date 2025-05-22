@@ -88,13 +88,13 @@ const Code93Barcode = (opts) => {
       ].join('');
    };
 
-   const toElements = function() {
-      return toBinaryString().match(/(.)\1*/g).map(e => {
-         return {
+   const toElements = () => {
+      return toBinaryString()
+         .match(/(.)\1*/g) // Split string into runs of matching characters
+         .map(e => ({
             fill: e[0] == '1',
-            bits: e.length
-         }
-      });
+            bits: e.length,
+         }));
    };
 
    const toSVG = (opts={}) => {
