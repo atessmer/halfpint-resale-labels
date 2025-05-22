@@ -48,7 +48,7 @@ const getTemplate = () => {
    const templateId = document.getElementById('template').value;
 
    return {
-      id: document.getElementById('template').value,
+      id: templateId,
       ...LABEL_TEMPLATES[templateId],
    }
 };
