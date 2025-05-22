@@ -157,9 +157,9 @@ const generateBarcodeLabels = () => {
    }
 
    const barcodeLabels = []
-   for (var i = 0; i < tagCounts.length; i++) {
+   for (let i = 0; i < tagCounts.length; i++) {
       const count = tagCounts[i].value;
-      for (var j = 0; j < count; j++) {
+      for (let j = 0; j < count; j++) {
          barcodeLabels.push(
             getBarcodeLabelNode(consigner.value, tagPrices[i].value+'.00')
          );

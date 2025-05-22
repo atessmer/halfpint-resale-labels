@@ -48,7 +48,7 @@ const valueToSymbol = (value) => {
 
 const csum = (symbols, maxWeight) => {
    const csum = symbols.toReversed().reduce((sum, c, idx) => {
-      let weight = (idx % maxWeight) + 1;
+      const weight = (idx % maxWeight) + 1;
       return sum + (symbolToValue(c) * weight);
    }, 0);
 
