@@ -155,9 +155,10 @@ const generateBarcodeLabels = () => {
       }
    }
 
+   const templateCount = getTemplate().count;
    let page;
    for (const [i, barcodeLabel] of barcodeLabels.entries()) {
-      if (i % getTemplate().count == 0) {
+      if (i % templateCount == 0) {
          page = document.createElement('div');
          page.classList.add('page', 'text-center', 'border', 'border-black');
          pages.appendChild(page);
