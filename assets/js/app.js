@@ -40,11 +40,17 @@ const getTemplate = () => {
    }
 };
 
+const createElementsByHTML = (html) => {
+   const template = document.createElement('template');
+   template.innerHTML = html.trim();
+
+   return template.content.childNodes[0];
+};
+
 const addTagGroup = (price=null, count=null) => {
    const tagsContainer = document.getElementById('tags-container');
 
-   const template = document.createElement('template');
-   template.innerHTML = `
+   const tagGroup = createElementsByHTML(`
       <div class="tag-group mb-2 input-group ">
          <input type="number" name="count" value="${count}" class="form-control text-end pe-1">
          <span class="input-group-text pe-4">Tags</span>
@@ -55,8 +61,7 @@ const addTagGroup = (price=null, count=null) => {
             <i class="delete-label-input bi bi-trash3-fill"></i>
          </button>
       </div>
-   `.trim();
-   const tagGroup = template.content.childNodes[0];
+   `);
 
    const deleteButton = tagGroup.getElementsByClassName('delete-tag')[0];
    deleteButton.addEventListener('click', (e) => {
@@ -107,8 +112,7 @@ const getBarcodeSvgNode = (data) => {
 const getBarcodeLabelNode = (consigner, price) => {
    const svg = getBarcodeSvgNode(`${consigner}$${price}`);
 
-   const template = document.createElement('template');
-   template.innerHTML = `
+   const barcodeLabel = createElementsByHTML(`
       <div class='barcode-label fw-bold border border-light-subtle rounded-1 float-start overflow-hidden d-flex justify-content-center align-items-center'>
          <div class='barcode-content'>
             <div class='barcode-header'>halfpintresale.com</div>
@@ -117,13 +121,12 @@ const getBarcodeLabelNode = (consigner, price) => {
                <div class='consigner d-inline-block mx-2'>${consigner}</div>
                <div class='price d-inline-block mx-2'>$${price}</div>
             </div>
-	 </div>
+         </div>
       </div>
-   `.trim();
-   const barcodeLabel = template.content.childNodes[0];
+   `);
    barcodeLabel.getElementsByClassName('barcode-svg')[0].appendChild(svg);
 
-   return template.content.childNodes[0];
+   return barcodeLabel;
 };
 
 const generateBarcodeLabels = () => {
