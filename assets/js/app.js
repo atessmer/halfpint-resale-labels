@@ -1,4 +1,8 @@
 import Code93Barcode from './code93.js';
+import {
+   createCookie,
+   readCookie,
+} from './cookies.js';
 
 const BARCODE_WIDTH = 120;
 const BARCODE_HEIGHT = 35;
@@ -13,25 +17,6 @@ const LABEL_TEMPLATES = {
       count: 40,
    },
 };
-
-/*
- * Cookie handlers.
- * source: https://www.quirksmode.org/js/cookies.html
- */
-const createCookie = (name, value) => {
-   document.cookie = `${name}=${value}; path=/`;
-}
-
-const readCookie = (name) => {
-   const cookies = document.cookie.split(";");
-   for (const cookie of cookies) {
-      const [cookie_name, cookie_value] = cookie.trim().split("=");
-      if (cookie_name == name) {
-         return cookie_value;
-      }
-   }
-   return null;
-}
 
 const populateTemplateOptions = () => {
    const template = document.getElementById('template');
