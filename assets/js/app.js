@@ -75,9 +75,11 @@ const addTagGroup = (price=null, count=null) => {
 
 const updateTagsMsg = () => {
    const tagCounts = document.getElementsByName('count');
-   const totalTags = tagCounts.values().reduce((sum, tagCount) => {
-      return sum + parseInt(tagCount.value || 0)
-   }, 0);
+   const totalTags = Array.from(tagCounts)
+      .map(t => isPositiveInteger(t.valueAsNumber) ? t.valueAsNumber : 0)
+      .reduce((sum, v) => {
+         return sum + v
+      }, 0);
 
    const template = getTemplate();
    const lastPageTags = totalTags % template.count;
@@ -110,21 +112,29 @@ const getBarcodeSvgNode = (data) => {
 };
 
 const getBarcodeLabelNode = (consigner, price) => {
-   const svg = getBarcodeSvgNode(`${consigner}$${price}`);
-
    const barcodeLabel = createElementsByHTML(`
       <div class='barcode-label fw-bold border border-light-subtle rounded-1 float-start overflow-hidden d-flex justify-content-center align-items-center'>
+      </div>
+   `);
+
+   if (isPositiveInteger(consigner) && isPositiveInteger(price)) {
+      price = `$${price}.00`;
+
+      const barcodeContent = createElementsByHTML(`
          <div class='barcode-content'>
             <div class='barcode-header'>halfpintresale.com</div>
             <div class='barcode-svg'></div>
             <div class='barcode-footer'>
                <div class='consigner d-inline-block mx-2'>${consigner}</div>
-               <div class='price d-inline-block mx-2'>$${price}</div>
+               <div class='price d-inline-block mx-2'>${price}</div>
             </div>
          </div>
-      </div>
-   `);
-   barcodeLabel.getElementsByClassName('barcode-svg')[0].appendChild(svg);
+      `);
+
+      const svg = getBarcodeSvgNode(`${consigner}${price}`);
+      barcodeContent.getElementsByClassName('barcode-svg')[0].appendChild(svg);
+      barcodeLabel.appendChild(barcodeContent);
+   }
 
    return barcodeLabel;
 };
@@ -146,11 +156,11 @@ const generateBarcodeLabels = () => {
 
    const barcodeLabels = []
    for (let i = 0; i < tagCounts.length; i++) {
-      const count = tagCounts[i].value;
-      const price = tagPrices[i].value;
+      const count = tagCounts[i].valueAsNumber;
+      const price = tagPrices[i].valueAsNumber;
       for (let j = 0; j < count; j++) {
          barcodeLabels.push(
-            getBarcodeLabelNode(consigner.value, `${price}.00`)
+            getBarcodeLabelNode(consigner.valueAsNumber, price)
          );
       }
    }
@@ -169,9 +179,13 @@ const generateBarcodeLabels = () => {
    updateTagsMsg();
 };
 
+const isPositiveInteger = (x) => {
+   return Number.isInteger(x) && x > 0;
+};
+
 const validateInput = (input) => {
    if (input.value == '' ||
-       (input.type == 'number' && parseInt(input.value) <= 0)) {
+       (input.type == 'number' && !isPositiveInteger(input.valueAsNumber))) {
       input.classList.add('is-invalid');
    } else {
       input.classList.remove('is-invalid');
