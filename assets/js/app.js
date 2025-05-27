@@ -229,6 +229,11 @@ document.addEventListener("DOMContentLoaded", () => {
       validateInput(e.target);
       generateBarcodeLabels();
    });
+   document.forms.controls.addEventListener('beforeinput', (e) => {
+      if (e.target.type == 'number' && e.data != null && !/^[0-9]+$/.test(e.data)) {
+         e.preventDefault();
+      }
+   });
 
    validateAllInputs();
    generateBarcodeLabels();
