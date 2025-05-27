@@ -158,10 +158,9 @@ const generateBarcodeLabels = () => {
    for (let i = 0; i < tagCounts.length; i++) {
       const count = tagCounts[i].valueAsNumber;
       const price = tagPrices[i].valueAsNumber;
+      const barcodeLabelNode = getBarcodeLabelNode(consigner.valueAsNumber, price)
       for (let j = 0; j < count; j++) {
-         barcodeLabels.push(
-            getBarcodeLabelNode(consigner.valueAsNumber, price)
-         );
+         barcodeLabels.push(barcodeLabelNode.cloneNode(true));
       }
    }
 
