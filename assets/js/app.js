@@ -165,6 +165,14 @@ const generateBarcodeLabels = () => {
       }
    }
 
+   const template = getTemplate();
+   pages.classList.forEach((cls) => {
+      if (cls.startsWith('template_')) {
+         pages.classList.remove(cls)
+      }
+   });
+   pages.classList.add(`template_${getTemplate().id}`);
+
    const templateCount = getTemplate().count;
    let page;
    for (const [i, barcodeLabel] of barcodeLabels.entries()) {
@@ -177,6 +185,7 @@ const generateBarcodeLabels = () => {
    }
 
    updateTagsMsg();
+   updateUrlHash();
 };
 
 const isPositiveInteger = (x) => {
@@ -200,6 +209,47 @@ const validateAllInputs = () => {
    }
 };
 
+const updateUrlHash = () => {
+   const consigner = document.getElementById('consigner');
+   const template = document.getElementById('template');
+   const tagPrices = document.getElementsByName('price');
+   const tagCounts = document.getElementsByName('count');
+
+   if (tagPrices.length != tagCounts.length) {
+      console.error('Number of count and price inputs does not match.');
+      return;
+   }
+
+   const data = {
+      consigner: consigner.valueAsNumber,
+      template: template.value,
+      tags: Array.from(tagPrices).map((_, idx) => {
+         return {
+            count: tagCounts[idx].valueAsNumber,
+            price: tagPrices[idx].valueAsNumber,
+         }
+      }),
+   }
+
+   window.location.hash = btoa(JSON.stringify(data));
+};
+
+const parseUrlHash = () => {
+   let data;
+   try {
+      data = JSON.parse(atob(window.location.hash.substr(1)));
+   } catch (e) {
+      return false;
+   };
+
+   document.getElementById('consigner').value = data.consigner;
+   document.getElementById('template').value = data.template;
+   for (const tag of data.tags) {
+      addTagGroup(tag.price, tag.count);
+   }
+   return true;
+};
+
 document.addEventListener("DOMContentLoaded", () => {
    const consigner = document.getElementById('consigner');
    consigner.value = readCookie('consigner');
@@ -207,22 +257,11 @@ document.addEventListener("DOMContentLoaded", () => {
       createCookie('consigner', e.target.value);
    });
 
-   document.getElementById('template').addEventListener('input', () => {
-      const pages = document.getElementById('pages');
-
-      pages.classList.forEach((cls) => {
-         if (cls.startsWith('template_')) {
-            pages.classList.remove(cls)
-         }
-      });
-      pages.classList.add(`template_${getTemplate().id}`);
-   });
    populateTemplateOptions();
 
    document.getElementById('add-tag').addEventListener("click", () => {
       addTagGroup();
    });
-   addTagGroup('2', '10');
 
    // Re-generate labels on any form field input event
    document.forms.controls.addEventListener('input', (e) => {
@@ -234,6 +273,11 @@ document.addEventListener("DOMContentLoaded", () => {
          e.preventDefault();
       }
    });
+
+   // Load config from URL, or populate defaults
+   if (!parseUrlHash()) {
+      addTagGroup('2', '10');
+   }
 
    validateAllInputs();
    generateBarcodeLabels();
