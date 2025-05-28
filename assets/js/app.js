@@ -82,6 +82,7 @@ const updateTagsMsg = () => {
       }, 0);
 
    const template = getTemplate();
+   const pages = Math.ceil(totalTags / template.count);
    const lastPageTags = totalTags % template.count;
    const emptyLabels = lastPageTags ? (template.count - lastPageTags) : 0;
 
@@ -89,11 +90,11 @@ const updateTagsMsg = () => {
    if (emptyLabels) {
       tagsMsg.classList.remove('text-success');
       tagsMsg.classList.add('text-danger');
-      tagsMsg.innerText = `${emptyLabels} unused labels on last page.`;
+      tagsMsg.innerText = `${pages} Page${pages > 1 ? 's' : ''} - ${emptyLabels} unused labels on last page.`;
    } else {
       tagsMsg.classList.remove('text-danger');
       tagsMsg.classList.add('text-success');
-      tagsMsg.innerText = 'No unused labels on last page.';
+      tagsMsg.innerText = `${pages} Page${pages > 1 ? 's' : ''} - no unused labels on last page.`;
    }
 };
 
