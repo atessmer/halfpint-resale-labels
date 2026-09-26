@@ -7,26 +7,26 @@ import {
 const BARCODE_WIDTH = 120;
 const BARCODE_HEIGHT = 35;
 
-const LABEL_TEMPLATES = {
-   5260: {
-      desc: '1" x 2-5/8" Address Labels',
-      count: 30,
-   },
-   'S-20133': {
-      desc: '1" x 2" Labels',
-      count: 40,
-   },
-   'Half-Pint': {
+const LABEL_TEMPLATES = new Map([
+   ['Half-Pint', {
       desc: 'Resale Tags',
       count: 6,
       createdCB: (e) => halfPintTagCreated(e),
-   },
-};
+   }],
+   ['5260', {
+      desc: '1" x 2-5/8" Address Labels',
+      count: 30,
+   }],
+   ['S-20133', {
+      desc: '1" x 2" Labels',
+      count: 40,
+   }],
+]);
 
 const populateTemplateOptions = () => {
    const template = document.getElementById('template');
 
-   for (const [id, cfg] of Object.entries(LABEL_TEMPLATES)) {
+   for (const [id, cfg] of LABEL_TEMPLATES.entries()) {
       const option = document.createElement('option');
       option.value = id;
       option.innerText = `${id}: ${cfg.desc}`;
@@ -41,7 +41,7 @@ const getTemplate = () => {
 
    return {
       id: templateId,
-      ...LABEL_TEMPLATES[templateId],
+      ...LABEL_TEMPLATES.get(templateId),
    }
 };
 
