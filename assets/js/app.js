@@ -118,29 +118,31 @@ const getBarcodeSvgNode = (data) => {
 };
 
 const getBarcodeLabelNode = (consigner, price) => {
+   if (!isPositiveInteger(consigner) || !isPositiveInteger(price)) {
+      return null;
+   }
+
    const barcodeLabel = createElementsByHTML(`
       <div class='barcode-label fw-bold border border-light-subtle rounded-1 float-start overflow-hidden d-flex justify-content-center align-items-center'>
       </div>
    `);
 
-   if (isPositiveInteger(consigner) && isPositiveInteger(price)) {
-      price = `$${price}.00`;
+   price = `$${price}.00`;
 
-      const barcodeContent = createElementsByHTML(`
-         <div class='barcode-content'>
-            <div class='barcode-header'>halfpintresale.com</div>
-            <div class='barcode-svg'></div>
-            <div class='barcode-footer'>
-               <div class='consigner d-inline-block mx-2'>${consigner}</div>
-               <div class='price d-inline-block mx-2'>${price}</div>
-            </div>
+   const barcodeContent = createElementsByHTML(`
+      <div class='barcode-content'>
+         <div class='barcode-header'>halfpintresale.com</div>
+         <div class='barcode-svg'></div>
+         <div class='barcode-footer'>
+            <div class='consigner d-inline-block mx-2'>${consigner}</div>
+            <div class='price d-inline-block mx-2'>${price}</div>
          </div>
-      `);
+      </div>
+   `);
 
-      const svg = getBarcodeSvgNode(`${consigner}${price}`);
-      barcodeContent.getElementsByClassName('barcode-svg')[0].appendChild(svg);
-      barcodeLabel.appendChild(barcodeContent);
-   }
+   const svg = getBarcodeSvgNode(`${consigner}${price}`);
+   barcodeContent.getElementsByClassName('barcode-svg')[0].appendChild(svg);
+   barcodeLabel.appendChild(barcodeContent);
 
    return barcodeLabel;
 };
@@ -167,6 +169,9 @@ const generateBarcodeLabels = () => {
       const count = tagCounts[i].valueAsNumber;
       const price = tagPrices[i].valueAsNumber;
       const barcodeLabelNode = getBarcodeLabelNode(consigner.valueAsNumber, price)
+      if (barcodeLabelNode == null) {
+         continue;
+      }
       for (let j = 0; j < count; j++) {
          const newLabelNode = barcodeLabelNode.cloneNode(true);
          if (typeof template?.createdCB == 'function') {
