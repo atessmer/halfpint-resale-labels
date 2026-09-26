@@ -20,7 +20,8 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 .page {
-   margin: 25px;
+   width: calc(8.5in + (var(--bs-border-width) * 2));
+   height: calc(11in + (var(--bs-border-width) * 2));
    box-shadow: 4px 4px #777;
 }
 
@@ -45,6 +46,7 @@ input[type=number]::-webkit-outer-spin-button {
 @media print {
    @page {
       size: letter portrait;
+      margin: 0;
    }
 
    :root {
@@ -52,13 +54,17 @@ input[type=number]::-webkit-outer-spin-button {
       --bs-border-style: none !important;
    }
 
+   #pages-container,
    #pages {
+      width: 100%;
       margin: 0;
       padding: 0;
       max-width: unset;
    }
 
    .page {
+      width: 8.5in;
+      height: 11in;
       margin: 0;
       page-break-inside: avoid;
       page-break-after: always;
@@ -76,8 +82,6 @@ input[type=number]::-webkit-outer-spin-button {
  */
 #pages.template_5260 {
    .page {
-      width: calc(8.5in + (var(--bs-border-width) * 2));
-      height: calc(11in + (var(--bs-border-width) * 2));
       padding: .5in .1875in;
    }
 
@@ -97,13 +101,95 @@ input[type=number]::-webkit-outer-spin-button {
  */
 #pages.template_S-20133 {
    .page {
-      width: calc(8.5in + (var(--bs-border-width) * 2));
-      height: calc(11in + (var(--bs-border-width) * 2));
       padding: .5in .25in;
    }
 
    .barcode-label {
       width: 2in;
       height: 1in;
+   }
+}
+
+/*
+ * Half-Pint Resale Tags
+ */
+#pages.template_Half-Pint {
+   .page {
+      padding: .375in .375in;
+   }
+
+   .barcode-label:nth-child(3n+1),
+   .barcode-label:nth-child(3n+2) {
+      margin-right: .25in;
+   }
+   .barcode-label:nth-child(6n+1),
+   .barcode-label:nth-child(6n+2),
+   .barcode-label:nth-child(6n+3) {
+      margin-bottom: .375in;
+   }
+
+   .barcode-label {
+      width: 2.4125in;
+      height: 4.9375in;
+      padding: 10px;
+      font-family: "Mandali", sans-serif;
+      color: #000;
+
+      /* Single SVG background for the entire tag, scales checkard border to fit */
+      background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgogIDxyZWN0IHg9IjIuNSIgeT0iMi41IiB3aWR0aD0iY2FsYygxMDAlIC0gNXB4KSIgaGVpZ2h0PSJjYWxjKDEwMCUgLSA1cHgpIiBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjVweCIgc3R5bGU9InN0cm9rZS1kYXNoYXJyYXk6IDVweCA1cHg7Ii8+Cjwvc3ZnPg==");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+
+      .logo,
+      .dbg-row,
+      .item,
+      .size,
+      .barcode-content {
+         margin-bottom: 3px;
+      }
+
+      .logo,
+      .donate,
+      .boy-girl,
+      .item,
+      .size,
+      .barcode-content {
+         border: 1px dotted black !important;
+         padding-top: 5px;
+         padding-bottom: 5px;
+      }
+
+      .logo img {
+         width: 95%;
+      }
+
+      .dbg-row {
+         font-family: "NTR", sans-serif;
+         font-size: 46px;
+         font-weight: bold;
+         line-height: 1.1;
+
+         .donate {
+            margin-right: 5px;
+            padding-top: 10px;
+         }
+         .boy-girl {
+            padding-top: 10px;
+         }
+      }
+
+      .item,
+      .size {
+         font-size: 28px;
+         font-weight: normal;
+         font-style: italic;
+         line-height: 1;
+         padding-top: 5px;
+         padding-right: 5px;
+      }
+
+      .item {
+         height: 180px;
+      }
    }
 }
