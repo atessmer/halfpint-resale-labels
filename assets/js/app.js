@@ -12,6 +12,7 @@ const LABEL_TEMPLATES = new Map([
       desc: 'Resale Tags',
       count: 6,
       createdCB: (e) => halfPintTagCreated(e),
+      deleteCB: (e) => halfPintTagRemove(e),
    }],
    ['5260', {
       desc: '1" x 2-5/8" Address Labels',
@@ -70,6 +71,10 @@ const addTagGroup = (price=null, count=null) => {
 
    const deleteButton = tagGroup.getElementsByClassName('delete-tag')[0];
    deleteButton.addEventListener('click', (e) => {
+      if (validateTagDelete()) {
+         e.preventDefault();
+         return;
+      }
       e.target.closest('.tag-group').remove();
       generateBarcodeLabels();
    })
@@ -224,6 +229,19 @@ const validateAllInputs = () => {
    }
 };
 
+const validateTagDelete = () => {
+   const classPrefix = 'template_';
+   const curTemplateName = Array.from(pages.classList)
+      .filter(c => c.startsWith(classPrefix))
+      .pop()
+      ?.slice(classPrefix.length);
+   const curTemplate = LABEL_TEMPLATES.get(curTemplateName);
+   if (typeof curTemplate?.deleteCB == 'function') {
+      return curTemplate.deleteCB();
+   }
+   return false;
+}
+
 const updateUrlHash = () => {
    const consigner = document.getElementById('consigner');
    const template = document.getElementById('template');
@@ -286,6 +304,12 @@ document.addEventListener("DOMContentLoaded", () => {
    document.forms.controls.addEventListener('beforeinput', (e) => {
       if (e.target.type == 'number' && e.data != null && !/^[0-9]+$/.test(e.data)) {
          e.preventDefault();
+         return;
+      }
+
+      if (validateTagDelete()) {
+         e.preventDefault();
+         return;
       }
    });
 
@@ -308,23 +332,60 @@ const halfPintTagCreated = (newLabelNode) => {
    newLabelNode.querySelector('.barcode-content').classList.add('flex-row');
 
    newLabelNode.prepend(createElementsByHTML(`
-      <div class='size flex-row text-end'>Size</div>
+      <div class='size flex-row text-end position-relative'>
+         Size
+         <div class='tag-input position-absolute text-center' contenteditable='plaintext-only'></div>
+      </div>
    `));
 
    newLabelNode.prepend(createElementsByHTML(`
-      <div class='item flex-row text-end'>Item</div>
+      <div class='item flex-row text-end position-relative'>
+         Item
+         <div class='tag-input position-absolute text-start align-content-center' contenteditable='plaintext-only'></div>
+      </div>
    `));
 
    newLabelNode.prepend(createElementsByHTML(`
       <div class='dbg-row flex-row d-flex'>
-         <div class='donate flex-col flex-fill'>D</div>
-         <div class='boy-girl flex-col flex-fill'>B / G</div>
+         <div class='donate flex-col flex-fill'>
+            <span class="click-to-circle">D</span>
+         </div>
+         <div class='boy-girl flex-col flex-fill'>
+            <span class="click-to-circle">B</span>
+            /
+            <span class="click-to-circle">G</span>
+         </div>
       </div>
    `));
+   newLabelNode.querySelectorAll('.click-to-circle').forEach(b => {
+      b.addEventListener('click', e => {
+         if (e.target.classList.contains('circled')) {
+            e.target.classList.remove('circled')
+         } else {
+            Array.from(e.target.parentElement.children).forEach(s => {
+               s.classList.remove('circled');
+            });
+            e.target.classList.add('circled');
+         }
+      })
+   });
 
    newLabelNode.prepend(createElementsByHTML(`
       <div class='logo flex-row'>
          <img class="max-h-full max-w-full object-contain" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQ3IiBoZWlnaHQ9Ijc0IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyNDcgNzQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogPHRleHQgeD0iOTAuNjg3NSIgeT0iNTUuMTcxODc1IiBmaWxsPSIjZmYwMGZmIiBmb250LXNpemU9IjE2cHgiIGxldHRlci1zcGFjaW5nPSIyLjc1cHgiIHhtbDpzcGFjZT0icHJlc2VydmUiPjx0c3BhbiB4PSI5MC42ODc1IiB5PSI1NS4xNzE4NzUiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJBcmltbyIgZm9udC1zaXplPSIxNnB4Ij5SRVNBTEU8L3RzcGFuPjwvdGV4dD4gPHRleHQgeD0iOTAuMjE4NzUiIHk9IjM3LjE3OTY4OCIgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IkFyaW1vIiBmb250LXNpemU9IjI0cHgiIGxldHRlci1zcGFjaW5nPSIxLjg1cHgiIHhtbDpzcGFjZT0icHJlc2VydmUiPjx0c3BhbiB4PSI5MC4yMTg3NSIgeT0iMzcuMTc5Njg4IiBmb250LWZhbWlseT0iJ0FyaWFsIEJsYWNrJyIgZm9udC1zaXplPSIyNHB4IiBmb250LXdlaWdodD0iYm9sZCI+SEFMRi1QSU5UPC90c3Bhbj48L3RleHQ+IDxjaXJjbGUgY3g9IjM3IiBjeT0iMzciIHI9IjM1LjQzOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4gPHBhdGggZD0ibTM3IDZhMzEgMzEgMCAwIDAtMzEgMzEgMzEgMzEgMCAwIDAgMzEgMzEgMzEgMzEgMCAwIDAgMi44MjAzLTAuMTg1NTUgNSA1IDAgMCAxLTAuMTk3MjYtMS4yNTIgNSA1IDAgMCAxIDIuOTc4NS00LjUxMzdsLTIuMDQ4OC0xMy40NDMtMTEuNiAwLjcyMDdhNC41IDQuNSAwIDAgMSAwLjAwMzkwNiAwLjA3MjI2NiA0LjUgNC41IDAgMCAxLTQuNSA0LjUgNC41IDQuNSAwIDAgMS00LjUtNC41IDQuNSA0LjUgMCAwIDEgNC41LTQuNSA0LjUgNC41IDAgMCAxIDMuNTM3MSAxLjcyMDdsOC4zNzExLTMuMTIxMS05LjE5NTMtNi45Mjk3IDEuNjU2Mi0yLjY1MjMgOS45MTggNS4wOTE4IDEuNjA1NS0xMi44NjlhNC41IDQuNSAwIDAgMS00LjEwNTUtNC40MjE5IDQuNSA0LjUgMCAwIDEgNC41LTQuNSA0LjUgNC41IDAgMCAxIDQuNSA0LjUgNC41IDQuNSAwIDAgMS0zLjA0NDkgNC4yMDlsMy4wMTk1IDExLjc5MyAxNS4yNjQtMi4wMDM5YTUuNSA1LjUgMCAwIDEtMC4xMTMyOC0wLjcxMDk0IDUuNSA1LjUgMCAwIDEgNS41LTUuNSA1LjUgNS41IDAgMCAxIDEuMjQwMiAwLjE0MDYyIDMxIDMxIDAgMCAwLTMwLjEwOS0yMy42NDV6bTI2LjA4NCAzMy42ODItMTUuODU5IDQuMTA3NCA4LjI5ODggNC43OTg4LTAuNjEzMjggMS42MzA5LTguMzI0Mi0yLjYyNyAwLjE4OTQ1IDE0LjQ2N2E1IDUgMCAwIDEgMi42OTM0IDMuMjgzMiAzMSAzMSAwIDAgMCAxOC4zMjYtMjUuMjIzIDUuNSA1LjUgMCAwIDEtMS45MjU4IDAuMzg0NzYgNS41IDUuNSAwIDAgMS0yLjc4NTItMC44MjIyNnoiIHN0cm9rZS13aWR0aD0iMS4wNTk1Ii8+PC9zdmc+">
       </div>
    `));
+};
+
+const halfPintTagRemove = () => {
+   let modifiedTags = false;
+
+   modifiedTags |= document.querySelectorAll('.click-to-circle.circled').length > 0;
+   modifiedTags |= Array.from(document.querySelectorAll('.tag-input')).some(e => e.textContent != '');
+
+   if (modifiedTags) {
+      return !confirm('All input tag information will be lost, do you want to proceed?');
+   }
+
+   return false;
 };

@@ -134,6 +134,8 @@ input[type=number]::-webkit-outer-spin-button {
       padding: 10px;
       font-family: "Mandali", sans-serif;
       color: #000;
+      -webkit-user-select: none;
+      user-select: none;
 
       /* Single SVG background for the entire tag, scales checkard border to fit */
       background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHN0eWxlPSJjb250YWluZXItdHlwZTogaW5saW5lLXNpemU7Ij4KICAgPGxpbmUgeDE9IjAiIHgyPSIxMDAlIiB5MT0iMCIgeTI9IjAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsIDIuNSkiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iNXB4IiBzdHlsZT0ic3Ryb2tlLWRhc2hhcnJheTogNXB4IGNhbGMoKCgxMDBjcXcgLSA1cHgpIC8gcm91bmQoKDEwMGNxdyAtIDVweCkgLyAxMHB4KSkgLSA1cHgpOyIvPgogICA8bGluZSB4MT0iMTAwJSIgeDI9IjAiIHkxPSIxMDAlIiB5Mj0iMTAwJSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwgLTIuNSkiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iNXB4IiBzdHlsZT0ic3Ryb2tlLWRhc2hhcnJheTogNXB4IGNhbGMoKCgxMDBjcXcgLSA1cHgpIC8gcm91bmQoKDEwMGNxdyAtIDVweCkgLyAxMHB4KSkgLSA1cHgpOyIvPgogICA8bGluZSB4MT0iMCIgeDI9IjAiIHkxPSIwIiB5Mj0iMTAwJSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMi41LCAwKSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSI1cHgiIHN0eWxlPSJzdHJva2UtZGFzaGFycmF5OiA1cHggY2FsYygoKDEwMGNxaCAtIDVweCkgLyByb3VuZCgoMTAwY3FoIC0gNXB4KSAvIDEwcHgpKSAtIDVweCk7Ii8+CiAgIDxsaW5lIHgxPSIxMDAlIiB4Mj0iMTAwJSIgeTE9IjEwMCUiIHkyPSIwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMi41LCAwKSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSI1cHgiIHN0eWxlPSJzdHJva2UtZGFzaGFycmF5OiA1cHggY2FsYygoKDEwMGNxaCAtIDVweCkgLyByb3VuZCgoMTAwY3FoIC0gNXB4KSAvIDEwcHgpKSAtIDVweCk7Ii8+Cjwvc3ZnPg==");
@@ -167,14 +169,16 @@ input[type=number]::-webkit-outer-spin-button {
          font-family: "NTR", sans-serif;
          font-size: 46px;
          font-weight: bold;
-         line-height: 1.1;
+         line-height: 1;
 
          .donate {
             margin-right: 5px;
             padding-top: 10px;
+            padding-bottom: 2px;
          }
          .boy-girl {
             padding-top: 10px;
+            padding-bottom: 2px;
          }
       }
 
@@ -189,7 +193,54 @@ input[type=number]::-webkit-outer-spin-button {
       }
 
       .item {
-         height: 180px;
+         height: 188px;
+      }
+
+      /* Input Handling */
+      .click-to-circle {
+         cursor: pointer;
+         position: relative;
+         display: inline-block;
+         width: 1em;
+         height: 1em;
+
+         &.circled::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translate(-5%, -13%);
+            width: 110%;
+            height: 110%;
+            border-radius: 50%;
+            border: 6px solid #000;
+         }
+      }
+
+      [contenteditable]:focus,
+      [contenteditable]:focus-visible {
+          outline: none !important;
+      }
+
+      .tag-input {
+         font-size: 20px;
+         font-style: normal;
+         line-height: 1.25em;
+         overflow: clip;
+      }
+
+      .item .tag-input {
+         top: 40px;
+         left: 5px;
+         height: calc(100% - 45px);
+         width: calc(100% - 10px);
+      }
+
+      .size .tag-input {
+         top: 5px;
+         left: 5px;
+         height: calc(100% - 10px);
+         width: calc(100% - 70px);
       }
    }
 }
